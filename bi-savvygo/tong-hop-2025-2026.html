@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SavvY - Bao cao Tong hop 2025-2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f2f5;color:#1a1a2e;font-size:13px}
+.hdr{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 40%,#7c2d12 100%);color:#fff;padding:24px 32px}
+.hdr h1{font-size:20px;font-weight:700}.hdr p{opacity:.7;margin-top:3px;font-size:11px}
+.kpi-row{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;padding:14px 32px;margin-top:-14px;position:relative;z-index:1}
+.kp{background:#fff;border-radius:10px;padding:14px;box-shadow:0 1px 6px rgba(0,0,0,.05);text-align:center}
+.kp .l{font-size:8.5px;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;font-weight:600}
+.kp .v{font-size:22px;font-weight:800;margin:4px 0 2px}
+.kp .s{font-size:9px;color:#9ca3af}
+.kp:nth-child(1) .v{color:#2563eb}.kp:nth-child(2) .v{color:#059669}.kp:nth-child(3) .v{color:#7c3aed}
+.kp:nth-child(4) .v{color:#d97706}.kp:nth-child(5) .v{color:#dc2626}.kp:nth-child(6) .v{color:#0891b2}.kp:nth-child(7) .v{color:#059669}
+.db{padding:14px 32px 32px;display:grid;gap:14px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.cd{background:#fff;border-radius:10px;padding:18px;box-shadow:0 1px 6px rgba(0,0,0,.03)}
+.cd h3{font-size:12.5px;font-weight:700;color:#1a1a2e;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #f0f2f5}
+.ct{position:relative;width:100%}.ct-t{height:320px}.ct-m{height:260px}.ct-s{height:210px}
+table.tb{width:100%;border-collapse:collapse;font-size:11px}
+table.tb th{background:#f8fafc;color:#6b7280;font-weight:600;text-transform:uppercase;font-size:9px;letter-spacing:.3px;padding:6px 7px;text-align:left;border-bottom:2px solid #e5e7eb}
+table.tb td{padding:6px 7px;border-bottom:1px solid #f0f2f5}
+table.tb tr:hover{background:#f8fafc}
+table.tb .n{text-align:right;font-variant-numeric:tabular-nums}
+.bg{display:inline-block;padding:1px 7px;border-radius:99px;font-size:9px;font-weight:700}
+.bg-r{background:#fee2e2;color:#991b1b}.bg-g{background:#dcfce7;color:#166534}.bg-b{background:#dbeafe;color:#1e40af}.bg-y{background:#fef9c3;color:#854d0e}.bg-p{background:#f3e8ff;color:#6b21a8}
+.ins{background:linear-gradient(135deg,#eff6ff,#f5f3ff);border-left:3px solid #2563eb;border-radius:0 8px 8px 0;padding:10px 14px;margin-top:8px;font-size:11px;line-height:1.6;color:#374151}
+.ins strong{color:#1e40af}
+.dedup-box{background:#fef3c7;border:1px solid #fbbf24;border-radius:8px;padding:12px 16px;font-size:11px;margin-bottom:14px}
+.dedup-box strong{color:#92400e}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>SAVVY — Bao cao Tong hop Hieu qua Kinh doanh 2025-2026</h1>
+  <p>Du lieu hop nhat: Hoa hong 2025 (363 HD) + So theo doi KH 2026 (219 HD sau loc trung) | Cap nhat: 18/03/2026</p>
+</div>
+<div class="kpi-row">
+  <div class="kp"><div class="l">TONG GTHD</div><div class="v">41.4 ty</div><div class="s">582 hop dong</div></div>
+  <div class="kp"><div class="l">TONG KHACH</div><div class="v">1,941</div><div class="s">TB 3.3 khach/HD</div></div>
+  <div class="kp"><div class="l">GTHD 2026</div><div class="v">16.4 ty</div><div class="s">219 HD (Q1-Q2)</div></div>
+  <div class="kp"><div class="l">TANG TRUONG</div><div class="v">+66%</div><div class="s">vs cung ky 2025</div></div>
+  <div class="kp"><div class="l">BAN LOC TRUNG</div><div class="v">13</div><div class="s">trung noi bo da xoa</div></div>
+  <div class="kp"><div class="l">VOUCHER 2026</div><div class="v">31 HD</div><div class="s">~2.2 ty GTHD</div></div>
+  <div class="kp"><div class="l">NV BAN HANG</div><div class="v">14</div><div class="s">+2 moi (Thuy, Ngoc)</div></div>
+</div>
+<div class="db">
+  <div class="dedup-box">
+    <strong>Xu ly loc trung du lieu:</strong> Da kiem tra 232 ban ghi 2026 so voi 363 ban ghi 2025 theo So HD. Ket qua: <strong>0 trung voi 2025</strong>, <strong>13 trung noi bo 2026</strong> (cung So HD xuat hien o ca Tour FIT va Trang tinh27). Da loai bo 13 ban ghi trung, con lai <strong>219 ban ghi sach</strong> duoc dua vao bao cao.
+  </div>
+
+  <!-- ROW 1: YoY Comparison + 2026 Monthly -->
+  <div class="r2">
+    <div class="cd">
+      <h3>📊 So sanh Doanh so 2025 vs 2026 theo Thang khoi hanh</h3>
+      <div class="ct ct-t"><canvas id="c1"></canvas></div>
+      <div class="ins"><strong>Nhan xet:</strong> 2026 tang truong <strong>vuot troi</strong> so voi 2025 tai cung ky. T3/2026 (4.4 ty) gap 5.5 lan T3/2025 (811 tr). T4/2026 dat <strong>7.4 ty</strong> — hua hen vuot dinh 5.6 ty cua T12/2025. Du an dang tren da tang truong rat manh.</div>
+    </div>
+    <div class="cd">
+      <h3>📈 Chi tiet Doanh so 2026 theo thang (trieu VND)</h3>
+      <div class="ct ct-t"><canvas id="c2"></canvas></div>
+      <div class="ins"><strong>Nhan xet:</strong> <strong>T4/2026</strong> la thang dinh voi 86 HD, 350 khach, 7.38 ty — gap 3 lan T3. Giai doan T1-T2 con cham (290tr + 2.6ty). Hien tai da booking truoc den T10/2026 (My-Canada).</div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Sale Performance 2026 + Combined Ranking -->
+  <div class="r2">
+    <div class="cd">
+      <h3>👥 Hieu qua Nhan vien 2026 — GTHD</h3>
+      <div class="ct ct-t"><canvas id="c3"></canvas></div>
+    </div>
+    <div class="cd">
+      <h3>🏆 Bang xep hang Tong hop 2025+2026</h3>
+      <table class="tb" id="tbl1"><thead><tr><th>#</th><th>NV</th><th class="n">2025</th><th class="n">2026</th><th class="n">Tong</th><th class="n">Tang</th><th>Xu huong</th></tr></thead><tbody></tbody></table>
+      <div class="ins" style="margin-top:8px"><strong>Nhan xet:</strong> <strong>Huyenlt</strong> tang truong manh nhat (+23%). <strong>Yennt</strong> but pha an tuong tu 198tr len 571tr (+188%). Hai NV moi (Thuypm, Thuypp) da dong gop 345tr chi trong Q1.</div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Source + Tour + Voucher -->
+  <div class="r3">
+    <div class="cd">
+      <h3>🎯 Nguon khach 2026</h3>
+      <div class="ct ct-m"><canvas id="c4"></canvas></div>
+    </div>
+    <div class="cd">
+      <h3>✈️ Top 10 Tuyen tour 2026</h3>
+      <div class="ct ct-m"><canvas id="c5"></canvas></div>
+    </div>
+    <div class="cd">
+      <h3>🎟️ Hieu qua chuong trinh Voucher 2026</h3>
+      <table class="tb">
+        <thead><tr><th>Voucher</th><th class="n">So HD</th><th class="n">GTHD (tr)</th></tr></thead>
+        <tbody>
+          <tr><td>Nhom 300k</td><td class="n">10</td><td class="n">693</td></tr>
+          <tr><td>Voucher 8/3</td><td class="n">5</td><td class="n">350</td></tr>
+          <tr><td>Voucher 2 trieu</td><td class="n">5</td><td class="n">311</td></tr>
+          <tr><td>Voucher 500k</td><td class="n">4</td><td class="n">148</td></tr>
+          <tr><td>Nhom 700k</td><td class="n">3</td><td class="n">455</td></tr>
+          <tr><td>Voucher 1tr+uu dai</td><td class="n">2</td><td class="n">95</td></tr>
+          <tr><td>Voucher 2tr+li xi</td><td class="n">1</td><td class="n">89</td></tr>
+          <tr><td>Voucher 1 trieu</td><td class="n">1</td><td class="n">45</td></tr>
+          <tr style="background:#f0fdf4;font-weight:700"><td>TONG</td><td class="n">31</td><td class="n">2,185</td></tr>
+        </tbody>
+      </table>
+      <div class="ins" style="margin-top:6px"><strong>Nhan xet:</strong> 31/219 HD (14%) su dung voucher, dong gop <strong>2.19 ty</strong> (13% doanh so). Voucher "Nhom 300k" hieu qua nhat (10 HD). Chuong trinh 8/3 tao duoc 5 deal.</div>
+    </div>
+  </div>
+
+  <!-- ROW 4: P&L Updated -->
+  <div class="cd">
+    <h3>💼 BAO CAO LAI LO TONG HOP CAP NHAT — DU AN SAVVY (T05/2025 – T03/2026)</h3>
+    <div class="r2" style="gap:16px">
+      <div>
+        <table class="tb">
+          <thead><tr><th colspan="3" style="background:#dbeafe;color:#1e40af;font-size:11px">DOANH THU (da loc trung)</th></tr>
+          <tr><th>Chi tieu</th><th class="n">2025</th><th class="n">2026 (Q1)</th></tr></thead>
+          <tbody>
+            <tr><td>Tong GTHD</td><td class="n" style="font-weight:700">24.94 ty</td><td class="n" style="font-weight:700;color:#059669">16.42 ty</td></tr>
+            <tr><td>So hop dong</td><td class="n">363</td><td class="n">219</td></tr>
+            <tr><td>So khach hang</td><td class="n">1,207</td><td class="n">734</td></tr>
+            <tr><td>GTHD TB/HD</td><td class="n">68.6 tr</td><td class="n" style="color:#059669">75.0 tr (+9.3%)</td></tr>
+            <tr><td>LN Gop (2025 da xac nhan)</td><td class="n">1.37 ty</td><td class="n" style="color:#6b7280">Chua co du lieu</td></tr>
+            <tr style="background:#f0f4ff"><td style="font-weight:700">TONG GTHD HOP NHAT</td><td colspan="2" class="n" style="font-weight:800;color:#2563eb;font-size:14px">41.36 ty</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <table class="tb">
+          <thead><tr><th colspan="2" style="background:#f0fdf4;color:#065f46;font-size:11px">CHI SO TANG TRUONG</th></tr></thead>
+          <tbody>
+            <tr><td>Tang truong GTHD (Q1 YoY)</td><td class="n"><span class="bg bg-g">+66%</span></td></tr>
+            <tr><td>GTHD TB/HD tang</td><td class="n"><span class="bg bg-g">+9.3%</span></td></tr>
+            <tr><td>NV ban hang 2026</td><td class="n">14 (+2 moi)</td></tr>
+            <tr><td>Nang suat TB/NV (2026)</td><td class="n">1.17 ty</td></tr>
+            <tr><td>Thang dinh 2026 (T4)</td><td class="n" style="font-weight:700;color:#059669">7.38 ty</td></tr>
+            <tr><td>Du kien ca nam 2026</td><td class="n" style="font-weight:700;color:#2563eb">~50-55 ty</td></tr>
+          </tbody>
+        </table>
+        <div class="ins" style="margin-top:8px"><strong>Du bao:</strong> Neu duy tri da tang truong T3-T4 va mua cao diem T10-T12 dat dinh nhu 2025, du an co the dat <strong>50-55 ty GTHD ca nam 2026</strong>, tang 100-120% so voi 2025. Voi GTHD TB/HD tang 9.3%, cho thay doi ngu dang ban duoc tour gia tri cao hon.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 5: 2026 vs 2025 sales comparison -->
+  <div class="r2">
+    <div class="cd">
+      <h3>📉 So sanh Nhan vien: GTHD 2025 vs 2026</h3>
+      <div class="ct ct-t"><canvas id="c6"></canvas></div>
+    </div>
+    <div class="cd">
+      <h3>🔄 So sanh Nguon khach: 2025 vs 2026</h3>
+      <div class="ct ct-t"><canvas id="c7"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";Chart.defaults.font.size=10;
+const fmt=v=>{if(Math.abs(v)>=1000)return(v/1000).toFixed(1)+' ty';return v.toFixed(0)+' tr'};
+
+// C1: YoY Monthly comparison
+new Chart(document.getElementById('c1'),{type:'bar',data:{
+  labels:['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'],
+  datasets:[
+    {label:'2025',data:[1622,3063,811,456,410,1009,1360,2263,1235,2945,4147,5615],backgroundColor:'#93c5fdaa',borderRadius:3},
+    {label:'2026',data:[290,2596,4424,7382,1095,171,39,0,0,294,0,0],backgroundColor:'#059669cc',borderRadius:3}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)}}},scales:{y:{ticks:{callback:v=>fmt(v)}}}}
+});
+
+// C2: 2026 monthly detail
+new Chart(document.getElementById('c2'),{type:'bar',data:{
+  labels:['T1','T2','T3','T4','T5','T6','T7','T10'],
+  datasets:[
+    {label:'GTHD (tr)',data:[290,2596,4424,7382,1095,171,39,294],backgroundColor:['#93c5fd','#60a5fa','#3b82f6','#2563eb','#60a5fa','#93c5fd','#bfdbfe','#93c5fd'],borderRadius:5},
+    {label:'So HD',data:[9,36,67,86,10,2,1,1],type:'line',borderColor:'#dc2626',borderWidth:2,pointRadius:4,pointBackgroundColor:'#dc2626',yAxisID:'y1'}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{tooltip:{callbacks:{label:c=>c.datasetIndex===0?fmt(c.raw):c.raw+' HD'}}},scales:{y:{ticks:{callback:v=>fmt(v)}},y1:{position:'right',grid:{drawOnChartArea:false}}}}
+});
+
+// C3: Sale 2026
+const s26=['Linhnty','Nhivtu','Huyenlt','Thuongth','Muiht','Nguyenlp','Haultm','Anhttv','Quynhntn','Yennt','Huongnt','Thuypm'];
+const g26=[2857,2305,2176,2065,1487,1375,1093,924,846,571,305,248];
+new Chart(document.getElementById('c3'),{type:'bar',data:{labels:s26,datasets:[{data:g26,backgroundColor:s26.map(n=>n==='Linhnty'||n==='Muiht'?'#059669cc':'#2563ebcc'),borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)}}},scales:{x:{ticks:{callback:v=>fmt(v)}}}}});
+
+// Ranking table
+const ranking=[
+  {n:'Linhnty',g25:4013,g26:2857},{n:'Nhivtu',g25:3316,g26:2305},{n:'Huyenlt',g25:1771,g26:2176},
+  {n:'Thuongth',g25:2266,g26:2065},{n:'Muiht',g25:2704,g26:1487},{n:'Nguyenlp',g25:2592,g26:1375},
+  {n:'Haultm',g25:2334,g26:1093},{n:'Anhttv',g25:2127,g26:924},{n:'Quynhntn',g25:1237,g26:846},
+  {n:'Yennt',g25:198,g26:571},{n:'Huongnt',g25:516,g26:305},{n:'Thuypm',g25:0,g26:248},
+];
+ranking.sort((a,b)=>(b.g25+b.g26)-(a.g25+a.g26));
+const tb1=document.querySelector('#tbl1 tbody');
+ranking.forEach((d,i)=>{
+  const total=(d.g25+d.g26);const pct=d.g25>0?((d.g26/d.g25-1)*100).toFixed(0):'Moi';
+  const cls=typeof pct==='string'?'bg-b':pct>=0?'bg-g':'bg-y';
+  tb1.innerHTML+=`<tr${i%2?' style="background:#f8fafc"':''}>
+    <td style="font-weight:700;color:#9ca3af">${i+1}</td><td style="font-weight:600">${d.n}</td>
+    <td class="n">${fmt(d.g25)}</td><td class="n">${fmt(d.g26)}</td>
+    <td class="n" style="font-weight:700">${fmt(total)}</td>
+    <td class="n"><span class="bg ${cls}">${typeof pct==='string'?pct:pct+'%'}</span></td>
+    <td>${d.g26>d.g25*0.6?'📈':'📉'}</td></tr>`;
+});
+
+// C4: Source 2026 pie
+new Chart(document.getElementById('c4'),{type:'doughnut',data:{
+  labels:['FA','Ca nhan','CTV','L8 SavvY','KH L8 Pan','TikTok','L8 refer','Hotline','Pan','Khac'],
+  datasets:[{data:[9644,1459,1210,918,781,730,636,408,371,263],backgroundColor:['#2563eb','#059669','#7c3aed','#d97706','#dc2626','#0891b2','#f59e0b','#6366f1','#ec4899','#6b7280'],borderWidth:2,borderColor:'#fff'}]
+},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{padding:6,usePointStyle:true,font:{size:9}}},tooltip:{callbacks:{label:c=>{let t=c.dataset.data.reduce((a,b)=>a+b,0);return c.label+': '+fmt(c.raw)+' ('+(c.raw/t*100).toFixed(1)+'%)'}}}}}});
+
+// C5: Top tours 2026
+const t26=['TH 5N4D','Han Quoc','Dubai 6N5D','Seoul-Nami','HQ 6N5D','BK-TH 7N6D','Tho Nhi Ky','BK-TH NoShop','My-Canada','TH 5N5D'];
+const tg26=[694,545,477,425,400,363,309,306,294,292];
+new Chart(document.getElementById('c5'),{type:'bar',data:{labels:t26,datasets:[{data:tg26,backgroundColor:t26.map((_,i)=>`hsl(${210+i*12},65%,${45+i*3}%)`),borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)}}},scales:{x:{ticks:{callback:v=>fmt(v)}}}}});
+
+// C6: Sale comparison
+new Chart(document.getElementById('c6'),{type:'bar',data:{
+  labels:['Linhnty','Nhivtu','Huyenlt','Thuongth','Muiht','Nguyenlp','Haultm','Anhttv','Quynhntn','Yennt','Huongnt'],
+  datasets:[
+    {label:'2025 (ca nam)',data:[4013,3316,1771,2266,2704,2592,2334,2127,1237,198,516],backgroundColor:'#93c5fdaa',borderRadius:3},
+    {label:'2026 (Q1)',data:[2857,2305,2176,2065,1487,1375,1093,924,846,571,305],backgroundColor:'#059669cc',borderRadius:3}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)}}},scales:{y:{ticks:{callback:v=>fmt(v)}}}}
+});
+
+// C7: Source comparison
+new Chart(document.getElementById('c7'),{type:'bar',data:{
+  labels:['FA','Pan','Ca nhan','TikTok','L8 SavvY','CTV','Khac'],
+  datasets:[
+    {label:'2025',data:[9893,4882,3343,2250,1207,410,953],backgroundColor:'#93c5fdaa',borderRadius:3},
+    {label:'2026',data:[9644,371,1459,730,918,1210,3088],backgroundColor:'#059669cc',borderRadius:3}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)}}},scales:{y:{ticks:{callback:v=>fmt(v)}}}}
+});
+</script>
+</body>
+</html>

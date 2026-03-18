@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SavvY Business Intelligence Portal</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+}
+
+/* Password Modal */
+.password-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.password-box {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.password-box h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #0f172a;
+}
+
+.password-box p {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.password-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.password-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.password-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.password-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+}
+
+.password-error {
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 8px;
+  display: none;
+}
+
+/* Main Layout */
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background: linear-gradient(135deg, #0f172a 0%, #1a2a47 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.logo-icon {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.logo-sub {
+  font-size: 11px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nav-menu {
+  flex: 1;
+  list-style: none;
+  padding: 16px 12px;
+}
+
+.nav-item {
+  margin-bottom: 8px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-left-color: #2563eb;
+}
+
+.nav-link.active {
+  background: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
+  border-left-color: #2563eb;
+}
+
+.nav-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.date-footer {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  background: white;
+  padding: 16px 32px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.header-date {
+  font-size: 13px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+/* Content Area */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  background: #f0f2f5;
+}
+
+.dashboard-section {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+.dashboard-section.active {
+  display: block;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 60px;
+    flex-direction: row;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .sidebar-header {
+    padding: 8px 16px;
+    border-bottom: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+  }
+
+  .nav-menu {
+    flex: 1;
+    padding: 0;
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+  }
+
+  .nav-item {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .nav-link {
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    padding: 12px 16px;
+  }
+
+  .nav-link.active {
+    border-bottom-color: #2563eb;
+    border-left-color: transparent;
+    background: rgba(37, 99, 235, 0.1);
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .main-content {
+    height: calc(100vh - 60px);
+  }
+
+  .header {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .header-title {
+    font-size: 16px;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f2f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+</style>
+</head>
+<body>
+
+<!-- Password Protection Modal -->
+<div class="password-modal" id="passwordModal">
+  <div class="password-box">
+    <h2>🔐 SavvY BI Portal</h2>
+    <p>Enter password to access the dashboard</p>
+    <input type="password" class="password-input" id="passwordInput" placeholder="Enter password" autocomplete="off">
+    <button class="password-btn" onclick="checkPassword()">Unlock</button>
+    <div class="password-error" id="passwordError">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- Main Container -->
+<div class="container" id="mainContainer" style="display: none;">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">S</div>
+        <div>
+          <div class="logo-text">SavvY</div>
+          <div class="logo-sub">BI Portal</div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <button class="nav-link active" data-dashboard="sales" onclick="switchDashboard('sales')">
+          <span class="nav-icon">📊</span>
+          <span>Sales 2025</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-dashboard="hr" onclick="switchDashboard('hr')">
+          <span class="nav-icon">👥</span>
+          <span>HR & Payroll</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" data-dashboard="combined" onclick="switchDashboard('combined')">
+          <span class="nav-icon">📈</span>
+          <span>2025-2026 Overview</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="date-footer" id="sidebarDate"></div>
+      <div>© 2026 SavvY</div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-title">SavvY Business Intelligence</div>
+      <div class="header-date" id="headerDate"></div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="content-area">
+      <div class="dashboard-section active" id="dashboard-sales">
+        <iframe src="sales-2025.html"></iframe>
+      </div>
+      <div class="dashboard-section" id="dashboard-hr">
+        <iframe src="hr-dashboard.html"></iframe>
+      </div>
+      <div class="dashboard-section" id="dashboard-combined">
+        <iframe src="tong-hop-2025-2026.html"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Password Protection
+const CORRECT_PASSWORD = 'savvy2026';
+
+function checkPassword() {
+  const input = document.getElementById('passwordInput');
+  const error = document.getElementById('passwordError');
+
+  if (input.value === CORRECT_PASSWORD) {
+    document.getElementById('passwordModal').style.display = 'none';
+    document.getElementById('mainContainer').style.display = 'flex';
+    updateDateTime();
+  } else {
+    error.style.display = 'block';
+    input.value = '';
+    input.focus();
+    setTimeout(() => {
+      error.style.display = 'none';
+    }, 3000);
+  }
+}
+
+// Allow Enter key to submit password
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      checkPassword();
+    }
+  });
+  document.getElementById('passwordInput').focus();
+});
+
+// Dashboard Switching
+function switchDashboard(name) {
+  // Hide all sections
+  const sections = document.querySelectorAll('.dashboard-section');
+  sections.forEach(s => s.classList.remove('active'));
+
+  // Show selected section
+  document.getElementById('dashboard-' + name).classList.add('active');
+
+  // Update nav links
+  const links = document.querySelectorAll('.nav-link');
+  links.forEach(link => {
+    if (link.getAttribute('data-dashboard') === name) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+}
+
+// Update date and time
+function updateDateTime() {
+  const now = new Date();
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  const dateStr = formatter.format(now);
+  document.getElementById('headerDate').textContent = dateStr;
+  document.getElementById('sidebarDate').textContent = dateStr;
+}
+
+// Update time every minute
+setInterval(updateDateTime, 60000);
+</script>
+
+</body>
+</html>
