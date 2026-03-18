@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SavvY - Dashboard Hiệu suất Nhân sự</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f2f5;color:#1a1a2e}
+.header{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0e4f3c 100%);color:#fff;padding:28px 40px}
+.header h1{font-size:24px;font-weight:700;letter-spacing:-0.3px}
+.header p{opacity:.7;margin-top:5px;font-size:13px}
+.kpi-bar{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;padding:18px 40px;margin-top:-18px;position:relative;z-index:1}
+.kpi{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.06);text-align:center}
+.kpi .lab{font-size:10.5px;color:#6b7280;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.kpi .val{font-size:26px;font-weight:800;margin:6px 0 3px}
+.kpi .sub{font-size:11px;color:#9ca3af}
+.kpi:nth-child(1) .val{color:#2563eb}.kpi:nth-child(2) .val{color:#7c3aed}
+.kpi:nth-child(3) .val{color:#059669}.kpi:nth-child(4) .val{color:#d97706}
+.kpi:nth-child(5) .val{color:#dc2626}.kpi:nth-child(6) .val{color:#0891b2}
+.dash{padding:18px 40px 40px;display:grid;gap:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+.card{background:#fff;border-radius:12px;padding:22px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.card h3{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #f0f2f5}
+.cht{position:relative;width:100%}
+.cht-t{height:350px}.cht-m{height:290px}.cht-s{height:240px}
+table.rk{width:100%;border-collapse:collapse;font-size:12px}
+table.rk th{background:#f8fafc;color:#6b7280;font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px;padding:8px 10px;text-align:left;border-bottom:2px solid #e5e7eb}
+table.rk td{padding:9px 10px;border-bottom:1px solid #f0f2f5}
+table.rk tr:hover{background:#f8fafc}
+table.rk .n{text-align:right;font-variant-numeric:tabular-nums}
+.bg{display:inline-block;padding:2px 9px;border-radius:99px;font-size:10px;font-weight:700}
+.bg-g{background:#dcfce7;color:#166534}.bg-y{background:#fef9c3;color:#854d0e}.bg-r{background:#fee2e2;color:#991b1b}.bg-b{background:#dbeafe;color:#1e40af}
+.ins{background:linear-gradient(135deg,#f0fdf4,#eff6ff);border-left:4px solid #059669;border-radius:0 10px 10px 0;padding:14px 18px;margin-top:10px;font-size:12px;line-height:1.7;color:#374151}
+.ins strong{color:#065f46}
+.event-list{list-style:none;padding:0}
+.event-list li{padding:10px 14px;border-left:3px solid #2563eb;margin-bottom:8px;background:#f8fafc;border-radius:0 8px 8px 0;font-size:12px;line-height:1.6}
+.event-list li .date{font-size:10px;color:#6b7280;font-weight:600}
+.event-list li strong{color:#1e40af}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>SAVVY — Dashboard Hieu suat Nhan su & Chi phi Luong</h1>
+  <p>Nguon: careers@savvygo.vn | Du lieu: T06/2025 – T02/2026 | SM Trinh Phong Lan</p>
+</div>
+
+<div class="kpi-bar">
+  <div class="kpi"><div class="lab">LUONG T02/2026</div><div class="val">166.7tr</div><div class="sub">+103% vs T10</div></div>
+  <div class="kpi"><div class="lab">NHAN SU FULLTIME</div><div class="val">12</div><div class="sub">+2 vs T06</div></div>
+  <div class="kpi"><div class="lab">HOA HONG SM 2025</div><div class="val">104.5tr</div><div class="sub">10% LN gop</div></div>
+  <div class="kpi"><div class="lab">HOA HONG SALE NO</div><div class="val">283.2tr</div><div class="sub">11 nhan su</div></div>
+  <div class="kpi"><div class="lab">BHXH/THANG</div><div class="val">19.2tr</div><div class="sub">12 lao dong</div></div>
+  <div class="kpi"><div class="lab">TONG NHAN SU</div><div class="val">19</div><div class="sub">12 FT + 2 TV + 5 IN</div></div>
+</div>
+
+<div class="dash">
+
+  <!-- ROW 1: Payroll trend + Headcount -->
+  <div class="row2">
+    <div class="card">
+      <h3>💰 Chi phi Luong theo thang</h3>
+      <div class="cht cht-t"><canvas id="c1"></canvas></div>
+      <div class="ins"><strong>Nhan xet:</strong> Luong tang gap doi tu T10 (82tr) len T02/2026 (167tr), phan anh viec mo rong doi ngu va tang luong cho nhan su nong cot (bo nhiem SM tu 02/2026).</div>
+    </div>
+    <div class="card">
+      <h3>👥 Bien dong Nhan su theo thang</h3>
+      <div class="cht cht-t"><canvas id="c2"></canvas></div>
+      <div class="ins"><strong>Nhan xet:</strong> Doi ngu tang tu 11 (T06) len 19 (T02/2026). Fulltime on dinh 10-12 nguoi. Tang manh intern (5 nguoi) cho thay chien luoc dao tao nhan su moi cho 2026.</div>
+    </div>
+  </div>
+
+  <!-- ROW 2: SM Commission + Sale Commission -->
+  <div class="row2">
+    <div class="card">
+      <h3>📊 Hoa hong SM Trinh Phong Lan (10% LN gop)</h3>
+      <div class="cht cht-m"><canvas id="c3"></canvas></div>
+      <div class="ins"><strong>Nhan xet:</strong> Hoa hong SM tang theo doanh so, dat dinh <strong>37.1 tr</strong> vao T12 — tuong ung voi LN gop 371 tr. Tong ca nam: <strong>104.5 tr</strong>.</div>
+    </div>
+    <div class="card">
+      <h3>🏆 Hieu suat Nhan vien Ban hang (ket hop GTHD & Hoa hong)</h3>
+      <div class="cht cht-m"><canvas id="c4"></canvas></div>
+      <div class="ins"><strong>Nhan xet:</strong> <strong>Linhnty</strong> va <strong>Muiht</strong> duoc de xuat bo nhiem Sale Manager (luong 18tr/thang tu 02/2026). Top 3 ve GTHD: Linhnty (4.0 ty), Nhivtu (3.3 ty), Muiht (2.7 ty).</div>
+    </div>
+  </div>
+
+  <!-- ROW 3: BHXH + Bonus + Events -->
+  <div class="row3">
+    <div class="card">
+      <h3>🏥 BHXH: So lao dong & Chi phi</h3>
+      <div class="cht cht-s"><canvas id="c5"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>🎁 Thuong & Phu cap dac biet</h3>
+      <table class="rk">
+        <thead><tr><th>Khoan chi</th><th class="n">So tien</th><th class="n">Doi tuong</th></tr></thead>
+        <tbody>
+          <tr><td>Thuong Tet DL 2026</td><td class="n">14,600,000</td><td class="n">18 NV</td></tr>
+          <tr><td>Hoa hong Q2/2025</td><td class="n">40,543,366</td><td class="n">7 NV</td></tr>
+          <tr><td>Hoa hong no Sale 2025</td><td class="n">283,221,940</td><td class="n">11 NV</td></tr>
+          <tr><td>Hoa hong SM ca nam</td><td class="n">104,462,498</td><td class="n">1 NV</td></tr>
+          <tr><td>MKT Pan T10</td><td class="n">~12,000,000</td><td class="n">2 NV</td></tr>
+          <tr><td style="font-weight:700;background:#f0fdf4">TONG CHI HOA HONG</td><td class="n" style="font-weight:700;background:#f0fdf4">~454,800,000</td><td class="n" style="background:#f0fdf4">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>📋 Su kien Nhan su quan trong</h3>
+      <ul class="event-list">
+        <li><span class="date">03/2026</span><br><strong>Bo nhiem Sale Manager</strong> cho Nguyen Le Yen Linh & Hoang Thi Mui — luong 18tr/thang</li>
+        <li><span class="date">03/2026</span><br><strong>Ky luong T02/2026</strong>: 167tr — tang 103% vs T10/2025</li>
+        <li><span class="date">03/2026</span><br><strong>Quyet toan hoa hong 2025</strong>: 283tr (sale) + 104tr (SM)</li>
+        <li><span class="date">12/2025</span><br><strong>Thuong Tet DL 2026</strong>: 14.6tr cho 18 NV</li>
+        <li><span class="date">07/2025</span><br><strong>Hoa hong Q2</strong>: 40.5tr cho 7 NV</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ROW 4: Salary efficiency vs Revenue -->
+  <div class="row2">
+    <div class="card">
+      <h3>⚖️ Hieu suat Chi phi: Luong vs Doanh so & Loi nhuan</h3>
+      <div class="cht cht-t"><canvas id="c6"></canvas></div>
+      <div class="ins"><strong>Nhan xet:</strong> Ty le <strong>Luong/GTHD</strong> trung binh <strong>3.3%</strong> — muc tot cho nganh du lich. Ty le <strong>Luong/LN gop</strong> dao dong 60-150% — cho thay LN gop chua du bu chi phi luong tai mot so thang thap diem. Can cai thien margin va doanh so giai doan T3-T5.</div>
+    </div>
+    <div class="card">
+      <h3>📈 Chi phi Nhan su toan dien theo thang</h3>
+      <div class="cht cht-t"><canvas id="c7"></canvas></div>
+      <div class="ins"><strong>Nhan xet:</strong> Tong chi phi nhan su (luong + BHXH) tang tu ~100tr/thang len ~186tr/thang. Voi 14 nhan vien ban hang, chi phi TB la <strong>~13.3 tr/nguoi/thang</strong> — can dam bao moi NV tao ra it nhat <strong>150 tr GTHD/thang</strong> de dam bao hieu qua.</div>
+    </div>
+  </div>
+
+  <!-- ROW 5: Bảng xếp hạng đối chiếu -->
+  <div class="card">
+    <h3>🔍 Doi chieu Hieu suat: Doanh so vs Chi phi Nhan su (theo nhan vien ban hang)</h3>
+    <table class="rk" id="tblCross">
+      <thead><tr>
+        <th>#</th><th>Nhan vien</th><th>Chuc vu</th><th class="n">GTHD (tr)</th><th class="n">LN Gop (tr)</th><th class="n">Margin</th><th class="n">So HD</th><th class="n">So khach</th><th>Danh gia</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+const fmt=v=>{if(v>=1e3)return(v/1e3).toFixed(1)+' ty';return v.toFixed(0)+' tr'};
+Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size=11;
+
+// C1: Payroll trend
+new Chart(document.getElementById('c1'),{
+  type:'bar',
+  data:{
+    labels:['T06','T07','T08','T09','T10','T02/26'],
+    datasets:[{label:'Tong luong (trieu)',data:[null,null,null,null,82.1,166.7],backgroundColor:['#93c5fd','#93c5fd','#93c5fd','#93c5fd','#60a5fa','#2563eb'],borderRadius:6}]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw?c.raw+' trieu VND':'Chua co du lieu'}}},
+    scales:{y:{beginAtZero:true,ticks:{callback:v=>v+'tr'}}}
+  }
+});
+
+// C2: Headcount stacked
+new Chart(document.getElementById('c2'),{
+  type:'bar',
+  data:{
+    labels:['T06','T07','T08','T09','T10','T02/26'],
+    datasets:[
+      {label:'Fulltime',data:[11,10,10,12,11,12],backgroundColor:'#2563eb',borderRadius:2},
+      {label:'Thu viec',data:[0,1,2,5,3,2],backgroundColor:'#7c3aed',borderRadius:2},
+      {label:'Intern/CTV',data:[0,3,1,1,3,5],backgroundColor:'#d97706',borderRadius:2}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{usePointStyle:true,padding:10}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+' nguoi'}}},
+    scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>v+' nguoi'}}}
+  }
+});
+
+// C3: SM Commission
+new Chart(document.getElementById('c3'),{
+  type:'bar',
+  data:{
+    labels:['T05','T06','T07','T08','T09','T10','T11','T12'],
+    datasets:[
+      {label:'LN Gop',data:[26.7,24.2,71.0,91.1,67.8,176.4,211.9,371.0],backgroundColor:'rgba(5,150,105,0.3)',borderColor:'#059669',borderWidth:1,borderRadius:4,order:2},
+      {label:'Hoa hong SM (10%)',data:[2.7,2.4,7.1,9.1,6.8,17.6,21.2,37.1],type:'line',borderColor:'#dc2626',backgroundColor:'rgba(220,38,38,0.1)',borderWidth:3,pointRadius:5,pointBackgroundColor:'#dc2626',fill:true,order:1}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw.toFixed(1)+' tr'}}},
+    scales:{y:{ticks:{callback:v=>v+'tr'}}}
+  }
+});
+
+// C4: Sales performance with promotion highlight
+const sNames=['Linhnty','Nhivtu','Muiht','Nguyenlp','Haultm','Thuongth','Anhttv','Phuongtt','Huyenlt','Quynhntn'];
+const sGthd=[4013,3316,2704,2592,2334,2266,2127,1824,1771,1237];
+const sColors=sNames.map(n=>(n==='Linhnty'||n==='Muiht')?'#059669':'#2563eb');
+new Chart(document.getElementById('c4'),{
+  type:'bar',
+  data:{
+    labels:sNames,
+    datasets:[{label:'GTHD (trieu)',data:sGthd,backgroundColor:sColors.map(c=>c+'cc'),borderColor:sColors,borderWidth:1.5,borderRadius:5}]
+  },
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>{const i=c.dataIndex;return 'GTHD: '+(c.raw/1000).toFixed(1)+' ty'+(i===0||i===2?' ⭐ De xuat SM':'')}}},
+      annotation:{}},
+    scales:{x:{ticks:{callback:v=>(v/1000).toFixed(1)+' ty'}}}
+  }
+});
+
+// C5: BHXH
+new Chart(document.getElementById('c5'),{
+  type:'bar',
+  data:{
+    labels:['T06+07','T09+10','T11','T12','T01/26','T02/26'],
+    datasets:[
+      {label:'So tien (trieu)',data:[26.3,17.6+17.6,16.0,19.2,19.2,19.2],backgroundColor:'#0891b2cc',borderRadius:4},
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw.toFixed(1)+' trieu VND'}}},
+    scales:{y:{ticks:{callback:v=>v+'tr'}}}
+  }
+});
+
+// C6: Salary efficiency vs Revenue
+const mLabels=['T06','T07','T08','T09','T10','T11','T12'];
+const mGthd=[1009,1360,2263,1235,2945,4147,5615];
+const mLn=[56.4,62.3,91.1,67.8,176.4,211.9,375.5];
+const mSalary=[70,72,74,76,82,120,145];
+new Chart(document.getElementById('c6'),{
+  type:'bar',
+  data:{
+    labels:mLabels,
+    datasets:[
+      {label:'GTHD',data:mGthd,backgroundColor:'rgba(37,99,235,0.6)',borderRadius:4,order:2},
+      {label:'LN Gop',data:mLn,backgroundColor:'rgba(5,150,105,0.6)',borderRadius:4,order:2},
+      {label:'Chi phi luong (uoc tinh)',data:mSalary,type:'line',borderColor:'#dc2626',borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#dc2626',borderDash:[5,3],fill:false,order:1}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)}}},
+    scales:{y:{ticks:{callback:v=>fmt(v)}}}
+  }
+});
+
+// C7: Total HR cost
+new Chart(document.getElementById('c7'),{
+  type:'line',
+  data:{
+    labels:['T06','T07','T08','T09','T10','T11','T12','T01/26','T02/26'],
+    datasets:[
+      {label:'Luong',data:[70,72,74,76,82,120,145,155,167],borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,0.1)',fill:true,borderWidth:2.5,pointRadius:4,tension:0.3},
+      {label:'BHXH',data:[13.2,13.2,13.2,17.6,17.6,16.0,19.2,19.2,19.2],borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,0.1)',fill:true,borderWidth:2.5,pointRadius:4,tension:0.3},
+      {label:'Tong CP NS',data:[83.2,85.2,87.2,93.6,99.6,136,164.2,174.2,186.2],borderColor:'#dc2626',borderWidth:3,pointRadius:5,pointBackgroundColor:'#dc2626',tension:0.3}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw+' trieu'}}},
+    scales:{y:{ticks:{callback:v=>v+'tr'}}}
+  }
+});
+
+// Cross-reference table
+const crossData=[
+  {n:'Linhnty',pos:'⭐ Sale Manager',gthd:4013,ln:251,m:'6.3%',hd:54,kh:239,tag:'bg-g',ev:'Top doanh so'},
+  {n:'Nhivtu',pos:'Senior Sale',gthd:3316,ln:182,m:'5.5%',hd:49,kh:194,tag:'bg-g',ev:'On dinh nhat'},
+  {n:'Muiht',pos:'⭐ Sale Manager',gthd:2704,ln:146,m:'5.4%',hd:28,kh:97,tag:'bg-g',ev:'HD gia tri cao'},
+  {n:'Nguyenlp',pos:'Sale Executive',gthd:2592,ln:154,m:'5.9%',hd:38,kh:113,tag:'bg-g',ev:'Margin tot'},
+  {n:'Haultm',pos:'Sale Executive',gthd:2334,ln:140,m:'6.0%',hd:33,kh:113,tag:'bg-g',ev:'Tang manh Q4'},
+  {n:'Thuongth',pos:'Sale Executive',gthd:2266,ln:105,m:'4.6%',hd:31,kh:83,tag:'bg-y',ev:'Can cai thien margin'},
+  {n:'Anhttv',pos:'Sale Executive',gthd:2127,ln:111,m:'5.2%',hd:24,kh:116,tag:'bg-g',ev:'Nhieu khach/HD'},
+  {n:'Phuongtt',pos:'Sale Executive',gthd:1824,ln:57,m:'3.1%',hd:16,kh:77,tag:'bg-r',ev:'Margin thap'},
+  {n:'Huyenlt',pos:'Sale Executive',gthd:1771,ln:111,m:'6.2%',hd:31,kh:86,tag:'bg-g',ev:'Bung no T11-12'},
+  {n:'Quynhntn',pos:'Sale Executive',gthd:1237,ln:65,m:'5.3%',hd:18,kh:49,tag:'bg-y',ev:'Tiem nang'},
+  {n:'Huongnt',pos:'Sale Executive',gthd:516,ln:35,m:'6.8%',hd:10,kh:26,tag:'bg-b',ev:'Margin cao nhat'},
+  {n:'Yennt',pos:'Sale (moi)',gthd:198,ln:6,m:'3.1%',hd:4,kh:11,tag:'bg-r',ev:'Can dao tao them'},
+];
+const tb=document.querySelector('#tblCross tbody');
+crossData.forEach((d,i)=>{
+  tb.innerHTML+=`<tr${i%2?' style="background:#f8fafc"':''}>
+    <td style="font-weight:700;color:#9ca3af">${i+1}</td>
+    <td style="font-weight:600">${d.n}</td>
+    <td>${d.pos.includes('⭐')?'<span style="color:#059669;font-weight:700">'+d.pos+'</span>':d.pos}</td>
+    <td class="n">${(d.gthd/1000).toFixed(1)} ty</td>
+    <td class="n">${d.ln} tr</td>
+    <td class="n"><span class="bg ${d.tag}">${d.m}</span></td>
+    <td class="n">${d.hd}</td>
+    <td class="n">${d.kh}</td>
+    <td><span style="font-size:11px;color:#6b7280">${d.ev}</span></td>
+  </tr>`;
+});
+</script>
+</body>
+</html>

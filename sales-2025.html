@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SavvY - Dashboard Phân tích Hiệu quả Bán hàng</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f0f2f5; color: #1a1a2e; }
+
+.header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; padding: 28px 40px; }
+.header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+.header p { opacity: 0.75; margin-top: 6px; font-size: 14px; }
+
+.kpi-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; padding: 20px 40px; margin-top: -20px; position: relative; z-index: 1; }
+.kpi-card { background: white; border-radius: 14px; padding: 20px 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); text-align: center; }
+.kpi-card .label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.kpi-card .value { font-size: 28px; font-weight: 800; margin: 8px 0 4px; }
+.kpi-card .sub { font-size: 12px; color: #9ca3af; }
+.kpi-card:nth-child(1) .value { color: #2563eb; }
+.kpi-card:nth-child(2) .value { color: #7c3aed; }
+.kpi-card:nth-child(3) .value { color: #059669; }
+.kpi-card:nth-child(4) .value { color: #d97706; }
+.kpi-card:nth-child(5) .value { color: #dc2626; }
+
+.dashboard { padding: 20px 40px 40px; display: grid; gap: 20px; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.row-full { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+.card { background: white; border-radius: 14px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+.card h3 { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #f0f2f5; }
+
+.chart-container { position: relative; width: 100%; }
+.chart-tall { height: 380px; }
+.chart-med { height: 320px; }
+
+table.ranking { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.ranking th { background: #f8fafc; color: #6b7280; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border-bottom: 2px solid #e5e7eb; }
+table.ranking td { padding: 10px 12px; border-bottom: 1px solid #f0f2f5; }
+table.ranking tr:hover { background: #f8fafc; }
+table.ranking .num { text-align: right; font-variant-numeric: tabular-nums; }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+.badge-green { background: #dcfce7; color: #166534; }
+.badge-yellow { background: #fef9c3; color: #854d0e; }
+.badge-red { background: #fee2e2; color: #991b1b; }
+.bar-bg { background: #f0f2f5; border-radius: 4px; height: 8px; width: 100%; }
+.bar-fill { border-radius: 4px; height: 8px; }
+
+.insight-box { background: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 100%); border-left: 4px solid #2563eb; border-radius: 0 12px 12px 0; padding: 16px 20px; margin-top: 12px; font-size: 13px; line-height: 1.7; color: #374151; }
+.insight-box strong { color: #1e40af; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>SAVVY — Dashboard Phân tích Hiệu quả Bán hàng</h1>
+  <p>SM: Trịnh Phong Lan &nbsp;|&nbsp; Giai đoạn: Tháng 5 – 12/2025 &nbsp;|&nbsp; Dữ liệu: 363 hợp đồng</p>
+</div>
+
+<div class="kpi-bar">
+  <div class="kpi-card">
+    <div class="label">Tổng GTHĐ</div>
+    <div class="value">24.9 tỷ</div>
+    <div class="sub">363 hợp đồng</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Tổng khách hàng</div>
+    <div class="value">1,207</div>
+    <div class="sub">TB 3.3 khách/HĐ</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Lợi nhuận gộp</div>
+    <div class="value">1.37 tỷ</div>
+    <div class="sub">Margin TB 5.5%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">GTHĐ trung bình</div>
+    <div class="value">68.6 tr</div>
+    <div class="sub">/ hợp đồng</div>
+  </div>
+  <div class="kpi-card">
+    <div class="label">Nhân viên bán hàng</div>
+    <div class="value">14</div>
+    <div class="sub">TB 1.78 tỷ/người</div>
+  </div>
+</div>
+
+<div class="dashboard">
+
+  <!-- ROW 1: Monthly trend + Source pie -->
+  <div class="row-2">
+    <div class="card">
+      <h3>📈 Xu hướng Doanh số & Lợi nhuận theo tháng</h3>
+      <div class="chart-container chart-tall"><canvas id="chartMonthly"></canvas></div>
+      <div class="insight-box">
+        <strong>Nhận xét:</strong> Doanh số tăng trưởng mạnh từ T10→T12, đạt đỉnh <strong>5.6 tỷ</strong> vào tháng 12. Tháng 3–5 là giai đoạn thấp điểm. Tháng 4 có margin cao đột biến (15.5%) nhờ tour lợi nhuận cao.
+      </div>
+    </div>
+    <div class="card">
+      <h3>🎯 Cơ cấu Nguồn khách hàng (theo GTHĐ)</h3>
+      <div class="chart-container chart-tall"><canvas id="chartSource"></canvas></div>
+      <div class="insight-box">
+        <strong>Nhận xét:</strong> <strong>FA (Free Agent)</strong> chiếm ~40% tổng doanh số — là kênh sinh lời nhất. <strong>SavvY TikTok</strong> đóng góp 9% — kênh digital triển vọng cần đầu tư thêm.
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Sales performance bar + ranking table -->
+  <div class="row-2">
+    <div class="card">
+      <h3>👥 Hiệu quả Nhân viên — GTHĐ & Lợi nhuận gộp</h3>
+      <div class="chart-container chart-tall"><canvas id="chartSales"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>🏆 Bảng xếp hạng Nhân viên</h3>
+      <table class="ranking" id="tableRanking">
+        <thead><tr><th>#</th><th>Nhân viên</th><th class="num">GTHĐ</th><th class="num">Margin</th><th>Hiệu suất</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="insight-box" style="margin-top:14px">
+        <strong>Top performer:</strong> Linhnty dẫn đầu doanh số (4.0 tỷ). Huongnt & Haultm nổi bật về margin (6–7.6%). Phuongtt & Yennt cần cải thiện biên lợi nhuận (3.1%).
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Heatmap Sale x Month -->
+  <div class="row-full">
+    <div class="card">
+      <h3>🗓️ Ma trận Doanh số: Nhân viên × Tháng (triệu VNĐ)</h3>
+      <div class="chart-container" style="height:420px"><canvas id="chartHeatmap"></canvas></div>
+      <div class="insight-box">
+        <strong>Nhận xét:</strong> Linhnty bùng nổ T12 (1.19 tỷ). Nhivtu ổn định nhất qua các tháng. Muiht có tháng 8 xuất sắc (974 tr). Huyenlt tăng trưởng mạnh T11-T12 nhờ mùa cao điểm.
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 4: Tour routes + Partners -->
+  <div class="row-2">
+    <div class="card">
+      <h3>✈️ Top 12 Tuyến tour theo GTHĐ</h3>
+      <div class="chart-container chart-tall"><canvas id="chartRoutes"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>🤝 Top 10 Đối tác Đại lý theo GTHĐ</h3>
+      <div class="chart-container chart-tall"><canvas id="chartPartners"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ROW 5: Margin by route + Customer group -->
+  <div class="row-2">
+    <div class="card">
+      <h3>💰 Tỷ suất Lợi nhuận gộp theo Tuyến tour (Top 12)</h3>
+      <div class="chart-container chart-med"><canvas id="chartMarginRoute"></canvas></div>
+      <div class="insight-box">
+        <strong>Nhận xét:</strong> Tour <strong>Thượng Hải 5* No Shopping</strong> dẫn đầu margin (7.8%). Các tour <strong>Phượng Hoàng Cổ Trấn</strong> (1.1%) và <strong>Nam Phi</strong> (2.2%) cần đàm phán lại giá đối tác.
+      </div>
+    </div>
+    <div class="card">
+      <h3>👨‍👩‍👧‍👦 Phân tích theo Nhóm khách (có phân loại)</h3>
+      <div class="chart-container chart-med"><canvas id="chartCustomerGroup"></canvas></div>
+      <div class="insight-box">
+        <strong>Nhận xét:</strong> Nhóm <strong>Bạn bè</strong> chiếm 26 HĐ, 1.88 tỷ. <strong>Công ty</strong> ít hợp đồng (4) nhưng giá trị cao (1.35 tỷ, TB 337 tr/HĐ) — tiềm năng phát triển lớn.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const fmt = v => {
+  if (v >= 1e9) return (v/1e9).toFixed(1) + ' tỷ';
+  if (v >= 1e6) return (v/1e6).toFixed(0) + ' tr';
+  return v.toLocaleString('vi-VN');
+};
+
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+Chart.defaults.font.size = 12;
+
+// === MONTHLY TREND ===
+new Chart(document.getElementById('chartMonthly'), {
+  type: 'bar',
+  data: {
+    labels: ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'],
+    datasets: [
+      { label: 'GTHĐ', data: [1621934000,3063285000,811380000,456280000,409940000,1009410000,1360014000,2263309000,1235430000,2945380000,4146977000,5615172000], backgroundColor: 'rgba(37,99,235,0.7)', borderRadius: 6, order: 2 },
+      { label: 'LN Gộp', data: [71343236,136270763,24174995,70946878,21033200,56406000,62292902,91144600,67826800,176367274,211864436,375529771], type: 'line', borderColor: '#dc2626', backgroundColor: 'rgba(220,38,38,0.1)', borderWidth: 3, pointRadius: 5, pointBackgroundColor: '#dc2626', fill: true, order: 1, yAxisID: 'y1' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmt(ctx.raw) } } },
+    scales: {
+      y: { beginAtZero: true, ticks: { callback: v => fmt(v) }, title: { display: true, text: 'GTHĐ (VNĐ)' } },
+      y1: { position: 'right', beginAtZero: true, ticks: { callback: v => fmt(v) }, title: { display: true, text: 'LN Gộp (VNĐ)' }, grid: { drawOnChartArea: false } }
+    }
+  }
+});
+
+// === SOURCE PIE ===
+new Chart(document.getElementById('chartSource'), {
+  type: 'doughnut',
+  data: {
+    labels: ['FA','Pan','Cá nhân','SavvY TikTok','Pan L8','L8 SavvY refer','Khác'],
+    datasets: [{
+      data: [9892944000,4882341000,3342506000,2250051000,1278130000,813745000,1478794000],
+      backgroundColor: ['#2563eb','#7c3aed','#059669','#d97706','#dc2626','#0891b2','#9ca3af'],
+      borderWidth: 2, borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { padding: 14, usePointStyle: true } },
+      tooltip: { callbacks: { label: ctx => { let t=ctx.dataset.data.reduce((a,b)=>a+b,0); return ctx.label+': '+fmt(ctx.raw)+' ('+(ctx.raw/t*100).toFixed(1)+'%)'; } } }
+    }
+  }
+});
+
+// === SALES PERFORMANCE ===
+const salesData = [
+  {name:'Linhnty',gthd:4013334000,ln:251186678},
+  {name:'Nhivtu',gthd:3316254000,ln:181995246},
+  {name:'Muiht',gthd:2704265000,ln:145818918},
+  {name:'Nguyenlp',gthd:2591995000,ln:154167650},
+  {name:'Haultm',gthd:2333618000,ln:139755553},
+  {name:'Thuongth',gthd:2266250000,ln:104851989},
+  {name:'Anhttv',gthd:2127161000,ln:110629793},
+  {name:'Phuongtt',gthd:1823930000,ln:56951683},
+  {name:'Huyenlt',gthd:1770892000,ln:110502491},
+  {name:'Quynhntn',gthd:1237130000,ln:65231437},
+  {name:'Huongnt',gthd:516340000,ln:35103978},
+  {name:'Yennt',gthd:198352000,ln:6085439},
+];
+
+new Chart(document.getElementById('chartSales'), {
+  type: 'bar',
+  data: {
+    labels: salesData.map(s=>s.name),
+    datasets: [
+      { label: 'GTHĐ', data: salesData.map(s=>s.gthd), backgroundColor: 'rgba(37,99,235,0.75)', borderRadius: 5 },
+      { label: 'LN Gộp', data: salesData.map(s=>s.ln), backgroundColor: 'rgba(5,150,105,0.75)', borderRadius: 5 }
+    ]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmt(ctx.raw) } } },
+    scales: { x: { ticks: { callback: v => fmt(v) } } }
+  }
+});
+
+// === RANKING TABLE ===
+const maxGTHD = salesData[0].gthd;
+const tbody = document.querySelector('#tableRanking tbody');
+salesData.forEach((s, i) => {
+  const margin = (s.ln / s.gthd * 100).toFixed(1);
+  const badgeClass = margin >= 6 ? 'badge-green' : margin >= 4 ? 'badge-yellow' : 'badge-red';
+  const pct = (s.gthd / maxGTHD * 100).toFixed(0);
+  const colors = ['#2563eb','#7c3aed','#059669','#d97706','#0891b2','#6366f1','#ec4899','#14b8a6','#f59e0b','#ef4444','#8b5cf6','#64748b'];
+  tbody.innerHTML += `<tr>
+    <td style="font-weight:700;color:#9ca3af">${i+1}</td>
+    <td style="font-weight:600">${s.name}</td>
+    <td class="num">${fmt(s.gthd)}</td>
+    <td class="num"><span class="badge ${badgeClass}">${margin}%</span></td>
+    <td><div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${colors[i%colors.length]}"></div></div></td>
+  </tr>`;
+});
+
+// === HEATMAP (stacked bar as proxy) ===
+const heatmapSales = ['Linhnty','Nhivtu','Muiht','Nguyenlp','Haultm','Thuongth','Anhttv','Phuongtt','Huyenlt','Quynhntn'];
+const heatmapMonths = ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'];
+const heatmapData = {
+  'Linhnty':[69,784,75,0,0,62,462,210,147,586,430,1188],
+  'Nhivtu':[316,790,57,0,15,324,112,54,184,478,306,681],
+  'Muiht':[0,334,0,0,232,74,0,974,195,204,300,391],
+  'Nguyenlp':[142,258,112,63,0,472,0,0,35,300,765,445],
+  'Haultm':[70,72,123,185,123,14,0,399,65,145,402,734],
+  'Thuongth':[205,66,152,68,33,31,16,32,38,578,327,720],
+  'Anhttv':[149,239,66,0,0,0,72,240,169,401,469,323],
+  'Phuongtt':[40,0,0,0,0,32,680,177,402,125,367,0],
+  'Huyenlt':[230,156,33,0,0,0,17,179,0,30,677,448],
+  'Quynhntn':[189,151,37,74,0,0,0,0,0,97,105,585],
+};
+const hColors = ['#1e40af','#7c3aed','#b91c1c','#047857','#b45309','#0e7490','#be185d','#4338ca','#0f766e','#a16207'];
+
+new Chart(document.getElementById('chartHeatmap'), {
+  type: 'bar',
+  data: {
+    labels: heatmapMonths,
+    datasets: heatmapSales.map((s,i) => ({
+      label: s,
+      data: heatmapData[s],
+      backgroundColor: hColors[i] + 'cc',
+      borderRadius: 2,
+    }))
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { usePointStyle: true, padding: 12 } },
+      tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw + ' tr' } }
+    },
+    scales: {
+      x: { stacked: true },
+      y: { stacked: true, ticks: { callback: v => v + ' tr' }, title: { display: true, text: 'GTHĐ (triệu VNĐ)' } }
+    }
+  }
+});
+
+// === TOP ROUTES ===
+const routes = [
+  {name:'Tây Âu 5 nước',v:914},{name:'BK - Thượng Hải',v:618},{name:'Dubai',v:567},
+  {name:'TH Hàng Châu Ô Trấn',v:545},{name:'Thượng Hải',v:522},{name:'Nam Phi',v:499},
+  {name:'PHoàng CT - TGG',v:479},{name:'BK mono',v:465},{name:'TH noshop',v:459},
+  {name:'HN-TH-HC-ÔT',v:449},{name:'TH 5* No Shop',v:417},{name:'Hàn Quốc 5N4Đ',v:394}
+];
+new Chart(document.getElementById('chartRoutes'), {
+  type: 'bar',
+  data: {
+    labels: routes.map(r=>r.name),
+    datasets: [{ label: 'GTHĐ (triệu)', data: routes.map(r=>r.v), backgroundColor: routes.map((_,i) => `hsl(${210+i*12}, 70%, ${45+i*2}%)`), borderRadius: 5 }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + ' triệu VNĐ' } } },
+    scales: { x: { ticks: { callback: v => v + ' tr' } } }
+  }
+});
+
+// === PARTNERS ===
+const partners = [
+  {name:'HANVINA',v:3650},{name:'Phượng Hoàng',v:2047},{name:'Otrip',v:2029},
+  {name:'Tràng An',v:1723},{name:'Maytrip',v:1344},{name:'Triều Hảo',v:1174},
+  {name:'Top One',v:911},{name:'PERFECT TOURS',v:898},{name:'VGI',v:750},{name:'Hoàng Long',v:650}
+];
+new Chart(document.getElementById('chartPartners'), {
+  type: 'bar',
+  data: {
+    labels: partners.map(p=>p.name),
+    datasets: [{ label: 'GTHĐ (triệu)', data: partners.map(p=>p.v), backgroundColor: partners.map((_,i) => `hsl(${260+i*10}, 65%, ${48+i*3}%)`), borderRadius: 5 }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + ' triệu VNĐ' } } },
+    scales: { x: { ticks: { callback: v => v + ' tr' } } }
+  }
+});
+
+// === MARGIN BY ROUTE ===
+const marginRoutes = [
+  {name:'TH 5* No Shop',m:7.8},{name:'Phuonglm',m:7.2},{name:'HN-TH-HC-ÔT',m:6.7},
+  {name:'TH-HC-ÔT',m:6.8},{name:'BK mono',m:6.3},{name:'TH',m:5.6},
+  {name:'Dubai',m:5.2},{name:'TH noshop',m:5.2},{name:'BK-TH',m:5.1},
+  {name:'Hàn Quốc 5N4Đ',m:4.5},{name:'Tây Âu',m:3.6},{name:'Nam Phi',m:2.2},
+  {name:'PH Cổ Trấn-TGG',m:1.1}
+];
+new Chart(document.getElementById('chartMarginRoute'), {
+  type: 'bar',
+  data: {
+    labels: marginRoutes.map(r=>r.name),
+    datasets: [{ label: 'Margin %', data: marginRoutes.map(r=>r.m), backgroundColor: marginRoutes.map(r => r.m >= 6 ? '#059669' : r.m >= 4 ? '#d97706' : '#dc2626'), borderRadius: 5 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.raw + '%' } } },
+    scales: { y: { ticks: { callback: v => v + '%' }, beginAtZero: true } }
+  }
+});
+
+// === CUSTOMER GROUP ===
+const groups = [
+  {name:'Bạn Bè',hd:26,gthd:1879,ln:108},
+  {name:'Công ty',hd:4,gthd:1348,ln:44},
+  {name:'Gia Đình',hd:12,gthd:1178,ln:31},
+  {name:'Vợ chồng',hd:9,gthd:665,ln:35},
+  {name:'Lẻ nữ',hd:9,gthd:160,ln:10},
+  {name:'Lẻ nam',hd:4,gthd:159,ln:7}
+];
+new Chart(document.getElementById('chartCustomerGroup'), {
+  type: 'bar',
+  data: {
+    labels: groups.map(g=>g.name),
+    datasets: [
+      { label: 'GTHĐ (triệu)', data: groups.map(g=>g.gthd), backgroundColor: 'rgba(124,58,237,0.7)', borderRadius: 5 },
+      { label: 'LN Gộp (triệu)', data: groups.map(g=>g.ln), backgroundColor: 'rgba(5,150,105,0.7)', borderRadius: 5 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw + ' tr' } } },
+    scales: { y: { ticks: { callback: v => v + ' tr' } } }
+  }
+});
+</script>
+</body>
+</html>
